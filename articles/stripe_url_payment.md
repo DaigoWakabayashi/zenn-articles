@@ -1,5 +1,5 @@
 ---
-title: "【Stripe】最近話題のURL決済を試してみた"
+title: "【Stripe】最近話題のPaymentLinksを試してみた"
 emoji: "📝"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ['stripe',]
