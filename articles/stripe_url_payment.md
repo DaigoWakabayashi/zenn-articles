@@ -6,6 +6,12 @@ topics: ['stripe',]
 published: true
 ---
 
+# 『PaymentLinks』 とは
+
+Stripe社が2021年5月26日から提供を開始したリンク決済サービスです。
+コードを書かずにポチポチするだけで決済リンク（単発/サブスク選択可）が作成出来ます。
+
+https://twitter.com/stripe/status/1397246058166632456?s=20
 
 # アカウントの作成
 
