@@ -1,5 +1,5 @@
 ---
-title: "【Stripe API×Cloud Functions】プラットフォーム型サービスにサブスクリプションを導入する"
+title: "【Stripe API×Cloud Functions】プラットフォーム型サービスにサブスクを導入する"
 emoji: "💰"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ['Stripe','Firebase','CloudFunctions','Nodejs']
