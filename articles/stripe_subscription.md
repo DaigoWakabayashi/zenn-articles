@@ -138,7 +138,7 @@ export const createStripePrice = functions.region("asia-northeast1").https.onCal
 
 https://stripe.com/docs/api/prices/create
 
-今回指定したのは以下の4つです、
+今回指定したのは以下の4つです。
 
 - 料金
 - 通貨
