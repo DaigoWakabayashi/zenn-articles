@@ -54,7 +54,7 @@ CodeBoyでは、「生徒」にあたります。
 CodeBoyでは、「CodeBoyというサービスそのもの」にあたります。
 
 
-## Connected Account
+### Connected Account
 プラットフォームを利用してサービスを提供し、入金を受ける方。上の図のピンク。
 CodeBoyでは、「講師」にあたります。
 
