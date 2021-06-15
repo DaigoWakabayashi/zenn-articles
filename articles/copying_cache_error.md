@@ -1,5 +1,5 @@
 ---
-title: "【<デバイス> is busy: Copying cache files from device】への対処法"
+title: "「<デバイス> is busy: Copying cache files from device」への対処法"
 emoji: "😸"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["flutter","iOS"]
