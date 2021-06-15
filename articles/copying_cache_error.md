@@ -24,6 +24,7 @@ Error: <デバイス名> is busy: Copying cache files from device. Xcode will co
 
 # 参考
 
+- Flutter大学のtimesチャンネルでつぶやいたら、以下の記事を[こんぶさん](https://zenn.dev/pressedkonbu)に教えてもらいました。ありがとうございました。
 
 
 https://www.reddit.com/r/iOSProgramming/comments/j1hsl3/copying_cache_files_from_device/?utm_source=share&utm_medium=ios_app&utm_name=iossmf
