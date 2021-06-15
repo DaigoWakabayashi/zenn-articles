@@ -18,7 +18,7 @@ Error: <デバイス名> is busy: Copying cache files from device. Xcode will co
 
 ![](https://storage.googleapis.com/zenn-user-upload/f728737a015fb5025d277940.png)
 
-- Finderが開くので、Derived data以下のフォルダをすべて削除し、再起動する
+- Finderが開くので、Derived data以下のフォルダをすべて削除し、リビルドする
 
 ![](https://storage.googleapis.com/zenn-user-upload/d5ef0e1f51eccb1fb77c13ba.png)
 
