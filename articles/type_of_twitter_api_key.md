@@ -1,12 +1,12 @@
 ---
-title: "TwitterAPI Key の呼称が多すぎるのでまとめる"
+title: "TwitterAPI Key の種類まとめ"
 emoji: "🐣"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["twitterAPI",]
+topics: ["twitterAPI"]
 published: true
 ---
 
-TwitterAPIについて調べていく中で、consumerKeyやらAppKeyやらCustomerKeyやら「なにがなになんだ」ってなったので調べると、公式Docに書いてあったので残しておく
+TwitterAPI について調べていく中で、consumerKey やら AppKey やら CustomerKey やら「なにがなになんだ」ってなったので調べると、公式 Doc に書いてあったので残しておく
 
 ```
 用語の説明
@@ -17,13 +17,13 @@ TwitterAPIについて調べていく中で、consumerKeyやらAppKeyやらCusto
 App Key === API Key === Consumer API Key === Consumer Key === Customer Key === oauth_consumer_key
 App Key Secret === API Secret Key === Consumer Secret === Consumer Key === Customer Key === oauth_consumer_secret
 Callback URL === oauth_callback
- 
+
 一時的な認証情報:
 
 Request Token === oauth_token
 Request Token Secret === oauth_token_secret
 oauth_verifier
- 
+
 トークンの認証情報:
 
 Access token === Token === resulting oauth_token
