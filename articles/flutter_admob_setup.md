@@ -3,11 +3,12 @@ title: "【Flutter ✕ AdMob】バナー広告を実装してみた"
 emoji: "🎉"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Flutter", "Firebase", "AdMob"]
-published: true
+published: false
 ---
 
 # 実装したもの
 
+現在「ねこバズ」という「ネコ関連のバズっているツイートだけが流れてくるアプリ」を開発中です。
 ListView 内で表示できるバナー広告を実装しました。
 
 ![](https://storage.googleapis.com/zenn-user-upload/fefac416e08d6e6b0ec73b7e.gif)
