@@ -17,7 +17,7 @@ published: true
 
 ![](https://storage.googleapis.com/zenn-user-upload/712006b856a405457c8f6f7a.gif)
 
-# Flutter の AdMob 事情
+# Flutter の AdMob パッケージ
 
 Flutter で用意されている admob パッケージは大きく 3 つあります。
 
