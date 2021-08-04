@@ -1,5 +1,5 @@
 ---
-title: "【GoogleMobileAds】Flutterでバナー広告をリスト表示する"
+title: "【Flutter ✕ AdMob】バナー広告を実装してみた"
 emoji: "🎉"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Flutter", "Firebase", "AdMob"]
