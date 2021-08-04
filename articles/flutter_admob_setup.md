@@ -1,17 +1,21 @@
 ---
-title: "【Flutter ✕ AdMob】バナー広告を実装してみた"
+title: "【Flutter ✕ AdMob】ListView内でバナー広告を表示する"
 emoji: "🎉"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Flutter", "Firebase", "AdMob"]
-published: false
+published: true
 ---
 
 # 実装したもの
 
-現在「ねこバズ」という「ネコ関連のバズっているツイートだけが流れてくるアプリ」を開発中です。
-ListView 内で表示できるバナー広告を実装しました。
+現在「ねこバズ」という「ネコ関連のバズツイートだけが流れてくるアプリ」を開発中です。
 
-![](https://storage.googleapis.com/zenn-user-upload/fefac416e08d6e6b0ec73b7e.gif)
+- どうせ作るなら広告入れてみたい
+- でも「画面上下部に固定されるタイプの広告」はちょっと抵抗がある
+
+という理由から ListView 内で表示できるバナー広告を実装しました。
+
+![](https://storage.googleapis.com/zenn-user-upload/712006b856a405457c8f6f7a.gif)
 
 # Flutter の AdMob 事情
 
@@ -28,7 +32,7 @@ https://pub.dev/packages/firebase_admob
 - admob_flutter
 
 OSS で作られているパッケージ。
-広告をひとつの Widget として扱うことができるので、ユーザーにストレスを与えずに広告を実装することができる。
+広告をひとつの Widget として扱うことができるので、好きな場所に広告を実装することができる。
 コントリビューター不足で、あまり積極的に開発が行われていない。
 
 https://pub.dev/packages/firebase_admob
@@ -73,7 +77,7 @@ AdMob のユーザー登録が完了しました。
 
 ![](https://storage.googleapis.com/zenn-user-upload/0120ad207a6724e59c2838c1.png)
 
-まずは iOS、アプリ未リリースを選択
+まずは iOS から登録します。
 
 ![](https://storage.googleapis.com/zenn-user-upload/1694f73563d283dce0c6fbe9.png)
 
@@ -135,8 +139,8 @@ iOS、Android 両方のアプリが作成できました。
 広告ユニットID・・・作成した広告ごとに存在（複数生成できる）
 ```
 
-iOS アプリの広告ユニットはできたので、Android アプリでも同様に広告ユニットを生成しておきましょう。
-AdMob の登録は以上です。
+iOS アプリの AdMob 登録ができました。
+Android アプリでも同様に広告ユニットを生成しておきましょう。
 
 ## 1. パッケージ導入
 
@@ -167,7 +171,7 @@ iOS は、ios/Runner/Info.plist を以下のように更新します。
 <dict>
     ~~~~~~~~~
     <key>GADApplicationIdentifier</key>
-    <string>ca-app-pub-aaaaaaaaaaaaa~00000000000000</string>
+    <string>iOSアプリID</string>
     <key>SKAdNetworkItems</key>
       <array>
         <dict>
@@ -192,7 +196,7 @@ Android は、android/app/src/main/AndroidManifest.xml 内を以下のように�
        <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
            android:name="com.google.android.gms.ads.APPLICATION_ID"
-           android:value="ca-app-pub-aaaaaaaaaaa~0000000000"/>
+           android:value="AndroidのアプリID"/>
     </application>
 </manifest>
 
@@ -200,7 +204,7 @@ Android は、android/app/src/main/AndroidManifest.xml 内を以下のように�
 
 ## 3. 広告の実装
 
-#### パッケージの初期化
+### パッケージの初期化
 
 まずは main 関数内で、初期化処理を行います。
 
@@ -213,7 +217,7 @@ void main() {
 }
 ```
 
-#### 広告の初期化（バナー広告）
+### 広告の初期化（バナー広告）
 
 次に、広告ウィジェットの初期化です。
 BannerAd クラスをインスタンス化した後、.load();メソッドを呼び出すことでバナー広告を読み込みます。
@@ -266,7 +270,7 @@ https://developers.google.com/admob/ios/test-ads?hl=ja#sample_ad_units
 
 https://developers.google.com/admob/android/test-ads?hl=ja#sample_ad_units
 
-#### バナー広告 Widet を使って表示
+### バナー広告 Widet を使って表示
 
 `load（）`を呼び出した後、`AdWidget`を用いることで、広告を表示することができます。
 `AdWidget`は StatefulWidget を継承しており、他の Widget たちと同様に UI に組み込むことが可能です。
@@ -279,7 +283,7 @@ AdWidget(ad: myBanner),
 
 バナー広告の表示が出来ました。
 
-#### ListView 内に広告を挿入
+### ListView 内に広告を挿入
 
 最後に、 ListView 内に広告を挿入する例を紹介しておきます。
 ListView.builder の index が 5 の倍数のときに広告を挿入する
@@ -328,7 +332,7 @@ ListView.builder の index が 5 の倍数のときに広告を挿入する
 バナー広告をリスト内に挿入することができました。
 よくある「バナーが画面上部や下部に固定されているヤツ」に比べると、ユーザーへのストレスも多少は軽減されるのではないでしょうか。
 
-![](https://storage.googleapis.com/zenn-user-upload/fefac416e08d6e6b0ec73b7e.gif)
+![](https://storage.googleapis.com/zenn-user-upload/712006b856a405457c8f6f7a.gif)
 
 これから AdMob の実装する方の参考になれば幸いです。
 最後まで読んでいただき、ありがとうございました。
