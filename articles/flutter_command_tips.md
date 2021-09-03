@@ -6,7 +6,8 @@ topics: ["Flutter", "iOS", "XCode"]
 published: true
 ---
 
-Flutter で開発中、ビルド周りで謎のエラーがでたときにやるコマンドたちです。
+Flutter で開発中、よくわからないエラー（特にビルド周り）がでたときにやるコマンドたちです。
+普段は mac のメモ帳に入れているのですが、どなたかの助けに慣れば幸いです。
 
 ```
 flutter clean
@@ -20,7 +21,5 @@ rm -Rf ios/Flutter/Flutter.framework
 rm -Rf ios/Flutter/Flutter.podspec
 
 ```
-
-需要と時間があれば、それぞれのコマンドの意味を追記しようと思います。
 
 もし他にも「なんかあったらコレ」的なモノがあれば教えていただけると嬉しいです。
