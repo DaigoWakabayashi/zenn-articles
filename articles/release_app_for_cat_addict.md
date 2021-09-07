@@ -9,8 +9,8 @@ published: false
 こんにちは、[ダイゴ](https://twitter.com/Mamushi_journey)と申します。
 
 先日、個人開発アプリ **「にゃんバズ | ねこ補給アプリ」** をリリースしました。
-初めての個人アプリを作るにあたって、iOS のリジェクト対応など苦労した点もありましたが、なんとかリリース出来ました。
-本記事では、**にゃんバズ** を作った背景や、使用している技術、苦労した点などについてまとめています。
+発案〜リリースを全て一人で行ったのは初めての経験で、iOS のリジェクト対応など苦労した点もありましたが、なんとかリリース出来ました。
+本記事では、**にゃんバズ** を作った背景や、使用している技術などについてまとめていきます。
 
 # なにを作ったか
 
@@ -81,7 +81,7 @@ Dart を書いてる時間より、Functions で TwitterAPI を叩く部分や�
 
 #### ① TwitterAPI の呼び出し
 
-Twitter の SearchAPI を使って、以下の条件に当てはまるツイートを取得しています。
+Cloud Functions の定期実行機能（Scheduler）を使って、15 分に 1 回、Twitter の SearchAPI を走らせます。
 
 https://developer.twitter.com/en/docs/twitter-api/v1/tweets/search/api-reference/get-search-tweets
 
