@@ -1,5 +1,5 @@
 ---
-title: "【StripeAPI】「顧客：送金先 = １：n」 になる場合の山分け決済を実装する"
+title: "【StripeAPI】「顧客：送金先 = １：n」 の山分け決済を実装する"
 emoji: "💰"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Stripe", "Firebase", "CloudFunctions", "Nodejs", "TypeScript"]
