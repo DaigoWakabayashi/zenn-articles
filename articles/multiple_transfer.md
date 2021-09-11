@@ -3,7 +3,7 @@ title: "【StripeAPI】複数の送金先への山分けを実装する"
 emoji: "💰"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Stripe", "Firebase", "CloudFunctions", "Nodejs", "TypeScript"]
-published: false
+published: true
 ---
 
 こんにちは、[ダイゴ](https://twitter.com/Mamushi_journey)と申します。
