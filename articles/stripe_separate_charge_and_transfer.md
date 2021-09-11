@@ -13,14 +13,14 @@ published: true
 
 どなたかの参考になれば幸いです。
 
-# 想定するサービス
+# 実装する機能
 
 プラットフォーム型サービスで、以下のような決済要件を持つものとします。
 
 - 決済総額のうち、10%をプラットフォーム手数料として徴収
 - 残り 90%を複数の送金先へ均等に山分けする
 
-# 全体のイメージ
+# サービス全体のイメージ
 
 ![](https://storage.googleapis.com/zenn-user-upload/a1f9d14974b20fd23e169fae.png)
 
@@ -41,10 +41,8 @@ published: true
 1. 顧客（Customer）の作成
 2. カード情報の登録
 3. 送金先アカウント（ConnectAccount）の作成
-4. 決済（Charge）の成立
-5. 送金先（Transfer）の作成
-
-ひとつずつ解説していきます。
+4. 決済（Charge）の作成
+5. 送金（Transfer）の作成
 
 # 1. 顧客（Customer）の作成
 
@@ -88,7 +86,7 @@ export const createCardInfo = functions
 
 https://qiita.com/y_toku/items/7e51ef7e69d7cbbfb3ca#%E3%83%88%E3%83%BC%E3%82%AF%E3%83%B3%E3%82%92%E5%88%A9%E7%94%A8%E3%81%97%E3%81%A6%E6%B1%BA%E6%B8%88%E3%82%92%E3%81%99%E3%82%8B-or-%E3%82%AB%E3%83%BC%E3%83%89%E6%83%85%E5%A0%B1%E3%82%92%E5%AE%89%E5%85%A8%E3%81%AA%E5%BD%A2%E3%81%A7%E4%BF%9D%E5%AD%98%E3%81%99%E3%82%8B%E6%B5%81%E3%82%8C
 
-# 3. 送金先アカウント（ConnectAccount）の作成
+# 3. 送金先アカウント（Account）の作成
 
 アカウントには、
 
@@ -100,8 +98,7 @@ https://qiita.com/y_toku/items/7e51ef7e69d7cbbfb3ca#%E3%83%88%E3%83%BC%E3%82%AF%
 
 https://stripe.com/docs/connect/accounts
 
-↑ の公式ドキュメントで、日本語で解説されているので解説は省略しますが、
-簡単にいうと、**Standard** → **Express** → **Custom**の順で、カスタマイズ性が高くなり、よりユーザーに Stripe を意識させずに実装することが可能です。
+**Standard** → **Express** → **Custom**の順で、カスタマイズ性が高くなり、よりユーザーに Stripe を意識させずに実装することが可能です。
 今回は、一番カスタマイズ性の高い**Custom**アカウントでの実装例を示していきます。
 
 ```ts
@@ -261,16 +258,12 @@ https://qiita.com/y_toku/items/7bfa42793801dfc5415d#source_transaction-%E3%82%92
 今回は、決済額を複数の送金先へ山分けする実装について紹介しました。
 
 山分けのロジック自体はそこまで複雑ではないのですが、
-**子アカウントの type 選定**や、**3 つの決済種別とその選定** あたりが、情報が多く、少し複雑なところかと思うので、本記事がどなたかの参考になれば幸いです。
+**「子アカウントの type」** や、**「3 つの決済種別とその選定」** あたりが、情報が多く、少し複雑なところかと思うので、本記事がどなたかの参考になれば幸いです。
 
 最後まで読んで頂き、ありがとうございました！
 
 # 参考
 
-- Stripe 公式ドキュメント
-
 https://stripe.com/docs/api
-
-- Stripe Connect 101
 
 https://qiita.com/y_toku/items/7bfa42793801dfc5415d#stripe-connect-%E3%81%A8%E3%81%AF
