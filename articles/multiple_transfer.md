@@ -166,12 +166,12 @@ https://stripe.com/docs/connect/destination-charges
 
 https://stripe.com/docs/connect/charges-transfers
 
-今回の決済要件は、
+今回は、
 
 - 支払い総額の 10%をプラットフォーム手数料として徴収
 - 残った 90%を**複数**の子アカウントで均等に山分け
 
-という要件であるため、[Separate Charges and Transfers](https://stripe.com/docs/connect/charges-transfers)を採用します。
+という決済要件であるため、[Separate Charges and Transfers](https://stripe.com/docs/connect/charges-transfers)を採用します。
 **「決済と送金を分けて行う」** ので、まずはプラットフォームに対しての決済を作成します。
 
 ```ts
