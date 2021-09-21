@@ -20,9 +20,11 @@ published: true
 
 です。
 
-![](https://storage.googleapis.com/zenn-user-upload/b25467225dd1478ff3330665.gif =400x)
+| タイムライン（500 いいね以上の猫ツイートを表示）                                        | いいね数による絞り込み                                                                   |
+| --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| ![](https://storage.googleapis.com/zenn-user-upload/592f3cce6aa266e10a307f30.png =300x) | ![](https://storage.googleapis.com/zenn-user-upload/e139977950211e2ffd0ded7d.jpeg =300x) |
 
-Twitter ランドの、かわいいネコチャンたちを、思う存分補給することが出来ます。
+Twitter ランドの可愛いネコチャンたちを、思う存分補給することが出来ます。
 Flutter で作ったので、iOS / Android どちらでもダウンロード出来ます。
 
 ▼ **iOS**
