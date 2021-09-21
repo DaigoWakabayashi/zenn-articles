@@ -80,7 +80,7 @@ Twitter の猫たちは **「ねこ特有の面白さ」** を含んでいるこ
 厳密には、土日で旅行に行った週などもあったので、100 時間弱、といった感じでしょうか。
 Dart を書いてる時間より、Functions で TwitterAPI を叩く部分や、iOS のリジェクト対応をしている時間の方が多かった気がします。
 
-### 全体像
+### 実装
 
 ![](https://storage.googleapis.com/zenn-user-upload/ac3dee02960c250cfaf053b6.png)
 
