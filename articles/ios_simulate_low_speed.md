@@ -1,5 +1,5 @@
 ---
-title: "【iOS】低速回線をシュミレートする"
+title: "【iOS】低速環境を再現する"
 emoji: "🍎"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ['Xcode','iOS',]
@@ -27,3 +27,7 @@ published: true
 
 ![](https://storage.googleapis.com/zenn-user-upload/e17dd3e9bc29-20220207.png)
 
+## 備考
+
+「シュミレート」という言葉は正確には誤りで、正しくは「シミュレート（Simulate）」らしいです。
+どっちでも日本人なら伝わりそうですが、参考までに。
