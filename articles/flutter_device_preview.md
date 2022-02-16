@@ -3,7 +3,7 @@ title: "【Flutter】device_preview を使って、様々なデバイス上で�
 emoji: "📱"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ['Flutter','Dart']
-published: false
+published: true
 ---
 
 ## はじめに
