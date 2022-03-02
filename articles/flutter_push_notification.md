@@ -37,15 +37,15 @@ dependencies:
 
 ここが少し面倒です。
 
-- **① Xcode の設定**
-- **② APNs と FCM の繋ぎこみ**
+- **Xcode の設定**
+- **APNs と FCM の繋ぎこみ**
    - APNs キーを Firebase に登録
    - App Identifier の生成
    - Provisioning Profile の登録
 
 の順で解説していきます。
 
-### ① Xcode の設定
+### Xcode の設定
 まずは、Xcode の capability（アプリが持つ機能）に
 
 - **「Push Notifications」**
@@ -75,7 +75,7 @@ Background Modes も同様に、**①「＋capability」ボタン** から、**�
 
 これで Xcode 側の設定は終了です。
 
-### ② APNs と FCM の繋ぎこみ
+### APNs と FCM の繋ぎこみ
 
 APNs(Apple Push Notification service)と FCM（Firebase Cloud Messaging)の繋ぎこみをしていきます。
 
