@@ -1,5 +1,5 @@
 ---
-title: "【Flutter】カメラ機能を実装してみた"
+title: "【Flutter】カメラ機能を実装する"
 emoji: "📷"
 type: "tech"
 topics: ['Flutter','iOS','Android']
