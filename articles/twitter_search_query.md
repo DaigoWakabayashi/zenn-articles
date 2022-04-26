@@ -7,6 +7,11 @@ published: true
 ---
 
 ## オペレータ一覧
+
+:::message
+学術研究利用のアクセスレベルである [**Academic Research**](https://developer.twitter.com/en/docs/twitter-api/getting-started/about-twitter-api#v2-access-level) のオペレータは除いています。
+:::
+
 #### Standalone 
 
 単独で使用することができるオペレータ。（他のオペレータと併用も可能）
@@ -100,3 +105,6 @@ SearchAPI を使用する場合、演算子は **引用元のツイートの内�
 :::
 
 
+## 参考
+
+https://developer.twitter.com/en/docs/twitter-api/tweets/search/integrate/build-a-query
