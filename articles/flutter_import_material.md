@@ -31,7 +31,7 @@ Flutter で開発をしていると頻繁に、 ↓ のような `import` 選択
 - cupertino.dart
 - widgets.dart
 
-の 3つのファイルは以下のようなな関係になっていて、
+の 3つのファイルは以下のような関係になっていて、
 
 ![](https://storage.googleapis.com/zenn-user-upload/e0fe4498e9df-20221020.png)
 
