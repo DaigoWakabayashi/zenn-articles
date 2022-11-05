@@ -1,5 +1,5 @@
 ---
-title: "【Flutter】flutter_stripe パッケージを使ってクレジットカード決済を導入する"
+title: "【Flutter】flutter_stripe パッケージ × Cloud Functions で楽々クレジット決済"
 emoji: "😊"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ['Flutter','Stripe',]
@@ -10,6 +10,7 @@ published: false
 
 はじめまして、ダイゴです。
 
+https://docs.page/flutter-stripe/flutter_stripe
 
 
 ## 環境
@@ -122,4 +123,43 @@ buildscript {
   }
 ```
 
+## 2. Stripe アカウントの作成 & Publishable Key の発行
+
+### Stripe アカウントの作成
+
+以下のページにアクセスし、アカウント作成 or ログインします。
+
+https://dashboard.stripe.com/login?redirect=%2Fdashboard
+
+ダッシュボードから新規の Stripe アカウント（≒ アプリのアカウント）を発行します。
+
+![](https://storage.googleapis.com/zenn-user-upload/7c6cde6eaf0c-20221105.png)
+
+![](https://storage.googleapis.com/zenn-user-upload/634ed8bc864d-20221105.png)
+
+すると、ダッシュボードから PublishableKey が確認できます。
+
+![](https://storage.googleapis.com/zenn-user-upload/693d237aa62e-20221105.png)
+
+flutter_stripe パッケージはこの Key さえあれば使える状態になります。
+
+:::message
+- Stripe の新規アカウント発行時は「テスト環境」となっており、テストのクレジットカードを使って擬似的な決済を走らせることができる状態です。
+- 実際にお金を動かすには[本番環境への利用申請](https://dashboard.stripe.com/account/onboarding/business-structure)が必要ですが本記事では省略しています。
+:::
+
+## カード決済
+
+flutter_stripe には、3つのカード決済手段があります。
+
+決済手段        |  説明  | 
+------------- | --------------------------------------- | 
+[**Payment sheet**](https://docs.page/flutter-stripe/flutter_stripe/sheet) | Stripeが推奨する決済手段。ローカライズ、アニメーション、エラー処理などが実装されている。  | 
+[**Cardfield**](https://docs.page/flutter-stripe/flutter_stripe/card_field) | カードの入力フィールド（一行）。カスタム性高く実装が可能。 | 
+[**Card form**](https://docs.page/flutter-stripe/flutter_stripe/card_field)  | CardFieldと機能は同等だが、複数行での入力が可能。 | 
+
+## カード決済機能の作成
+
+
+## 参考
 
