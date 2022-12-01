@@ -14,7 +14,7 @@ published: true
 
 12月、今年もアドベントカレンダーの季節が始まりましたね。
 
-今回は、個人的に前から気になっていた [**flutter_stripe**](https://pub.dev/packages/flutter_stripe) パッケージを触って、**シンプルなカード決済機能（PaymentSheet）**を実装してみました。
+今回は、個人的に前から気になっていた [**flutter_stripe**](https://pub.dev/packages/flutter_stripe) パッケージを触って、**シンプルなカード決済機能（PaymentSheet）** を実装してみました。
 
 サンプルアプリも作成したので、ぜひこちらも合わせて参考にしていただけると幸いです。
 
