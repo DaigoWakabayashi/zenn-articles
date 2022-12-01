@@ -3,7 +3,7 @@ title: "【FlutterFire × Stripe】flutter_stripe パッケージで楽々カー
 emoji: "💳"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ['Flutter','Firebase','Stripe','TypeScript','Nodejs']
-published: false
+published: true
 ---
 
 この記事は、[Flutter 大学アドベントカレンダー 2022](https://qiita.com/advent-calendar/2022/flutteruniv) 1日目の記事です。
@@ -12,10 +12,15 @@ published: false
 
 はじめまして、ダイゴです。
 
-今回は [**flutter_stripe**](https://pub.dev/packages/flutter_stripe) パッケージを触ってみました。
+12月、今年もアドベントカレンダーの季節が始まりましたね。
 
-========================== サンプル ==========================
+今回は、個人的に前から気になっていた [**flutter_stripe**](https://pub.dev/packages/flutter_stripe) パッケージを触って、**シンプルなカード決済機能（PaymentSheet）**を実装してみました。
 
+サンプルアプリも作成したので、ぜひこちらも合わせて参考にしていただけると幸いです。
+
+![](https://storage.googleapis.com/zenn-user-upload/ec0803714d66-20221201.gif =250x) 
+
+https://github.com/DaigoWakabayashi/flutter_stripe_example
 
 ## 目次
 
@@ -183,13 +188,15 @@ https://maku.blog/p/yfow6dk/
 ### PaymentIntent.create のエンドポイント作成
 
 では関数の作成に取り掛かります。
-まずは node の [stripe](https://www.npmjs.com/package/stripe) モジュールをインストールし、
+まずは node の [stripe](https://www.npmjs.com/package/stripe) パッケージをインストールし、
 
 ```shell
 npm install stripe --save
 ```
 
-Secret Key を使って以下のようなエンドポイントを作成します。
+2 で作成した Secret Key を使って以下のようなエンドポイントを作成します。
+
+![](https://storage.googleapis.com/zenn-user-upload/7db9106b9a32-20221201.png)
 
 ```ts
 import * as functions from "firebase-functions";
@@ -245,7 +252,7 @@ export const createPaymentIntent = functions.https.onCall(async (_, __) => {
 
 ## 4. クライアント側の実装（Flutter）
 最後に Flutter（クライアント）側の実装をしていきます。
-main 関数内で Stripe パッケージの publishableKey と、Cloud Functions を呼び出せるように Firebase の初期化を行います。（Firebase の初期化は [FlutterFire CLI](https://firebase.google.com/docs/flutter/setup?platform=ios) を使えば楽です）
+main 関数内で Stripe パッケージの publishableKey 設定と、Cloud Functions を呼び出せるように Firebase の初期化を行います。（Firebase の初期化は [FlutterFire CLI](https://firebase.google.com/docs/flutter/setup?platform=ios) を使えば楽です）
 
 ```dart
 void main() async {
@@ -264,8 +271,12 @@ void main() async {
 
 準備が整ったので、PaymentSheet を表示します。
 
-initPaymentSheet メソッドに必要な情報を渡すと、決済ボトムシートが表示されるようになります。
+PaymentSheet に関わるメソッドは
+- `initPaymentSheet`（PaymentSheet の初期化）
+- `presentPaymentSheet`（PaymentSheet の表示）
+- `confirmPaymentSheetPayment`（決済内容の確定）
 
+の3つです。
 全体のコードは以下になります。
 
 ```dart
@@ -341,11 +352,15 @@ class PaymentSheetPage extends HookWidget {
 
 ```
 
-コメントにある通りといえばそれまでなのですが、3 と 4 が `Future<void>` な点は、個人的には注意すべき点かなと思います。（どうしてこういった設計になっているのかわかる方いたら教えて下さい）
-
 実際に動かしてみると、Stripe 上で決済が成功しているのを確認できました。
 
 ![](https://storage.googleapis.com/zenn-user-upload/6f2060cbc89e-20221201.png)
+
+
+テスト用のカード番号は以下のドキュメントにまとまっているので、決済エラーやカードブランドごとに検証をする場合はこちらを参考にしてください。
+
+https://stripe.com/docs/testing#cards
+
 
 ## まとめ
 
@@ -354,7 +369,7 @@ class PaymentSheetPage extends HookWidget {
 本当は [payment_intent_succeeded](https://stripe.com/docs/api/events/types#event_types-payment_intent.succeeded) をリッスンする WebHook のエンドポイントを作って、決済リスト表示みたいなことも解説できればと思ったのですが、時間が足りずミニマムな例になってしまいました。また時間のあるときに触ってみようと思います。
 
 セキュアなカード決済機能を手軽に実装できるのは有り難いですね。
-コミッターへの寄付も出来るみたいなので、お世話になった際は感謝を伝えにいこうと思います。
+コミッターへの寄付も出来るみたいなので、お世話になった際はぜひ。
 
 https://opencollective.com/flutter_stripe
 
