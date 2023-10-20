@@ -3,6 +3,7 @@ title: "【Flutter】なぜウィジェットの import 先に「material.dart�
 emoji: "🤔"
 type: "tech"
 topics: ["Flutter", "Dart"]
+publication_name: "flutteruniv_dev"
 published: true
 ---
 
@@ -21,7 +22,7 @@ Flutter で開発をしていると頻繁に、 ↓ のような `import` 選択
 
 結論、
 
-**「（Material デザインに則った）Flutter アプリ開発に必要なファイルをすべて包含しているファイルだから」** 
+**「（Material デザインに則った）Flutter アプリ開発に必要なファイルをすべて包含しているファイルだから」**
 
 です。
 
@@ -31,7 +32,7 @@ Flutter で開発をしていると頻繁に、 ↓ のような `import` 選択
 - cupertino.dart
 - widgets.dart
 
-の 3つのファイルは以下のような関係になっていて、
+の 3 つのファイルは以下のような関係になっていて、
 
 ![](https://storage.googleapis.com/zenn-user-upload/e0fe4498e9df-20221020.png)
 
@@ -39,8 +40,7 @@ material.dart を `import` すると青色部分のライブラリ（ファイ�
 
 ![](https://storage.googleapis.com/zenn-user-upload/a8d1cca994a9-20221020.png)
 
-
-ファイルを見ながら具体的に解説していきます。（文中、間違っている点等あればご指摘いただけると幸いです🙏）
+ファイルを見ながら具体的に解説していきます。（文中、間違っている点等あればご指摘いただけると幸いです 🙏）
 
 ## material.dart の中身
 
@@ -50,13 +50,12 @@ material.dart を `import` すると青色部分のライブラリ（ファイ�
 
 ![](https://storage.googleapis.com/zenn-user-upload/f27a54523c09-20221018.png)
 
-
-
 ファイルに書かれている内容をざっくりまとめると
-- material という **`library`** として公開している
-- いろんなファイルを **``export``** している
 
-という2点になります。
+- material という **`library`** として公開している
+- いろんなファイルを **`export`** している
+
+という 2 点になります。
 
 **`import`** はよく使うので「他のファイルを使えるようにするもの」となんとなく分かりますが、**`library`** と **`export`** が分かりません。
 
@@ -69,22 +68,24 @@ https://zenn.dev/littleforest/articles/a4fc5bc7c944d42f66d2
 本記事向けにまとめるなら
 
 #### `library`
+
 - ライブラリ（`import`を用いて読み込むことのできるファイル）に名前をつけるために使う
 - `library` と明示しなくても、Dart ファイルであれば自動的に 1 つのライブラリとして扱われる
 
 #### `export`
+
 - 外部に公開するライブラリ（ファイル）を指定するために使う
 - メインのライブラリ（ファイル）に `export` を記述することで、そのライブラリを読み込むだけで `export` で指定されたライブラリ（ファイル）にもアクセスできる
 
 といった感じでしょうか。
 つまり、上述の material.dart ファイル内では
+
 - `library`：material.dart ファイルを「material」というライブラリとして外部に公開する
-- `export` ：Material デザインに則ったコンポーネントファイルたち（AppBar、ElevatedButton等）を「material」を読み込むだけでアクセスできるようにしている
+- `export` ：Material デザインに則ったコンポーネントファイルたち（AppBar、ElevatedButton 等）を「material」を読み込むだけでアクセスできるようにしている
 
 といったことが行われています。
 
 ![](https://storage.googleapis.com/zenn-user-upload/3f44e8146964-20221019.png)
-
 
 ## widgets.dart じゃだめなのか
 
@@ -101,7 +102,6 @@ widgets.dart では Material でも Cupertino でもない共通の widget（Tex
 
 ![](https://storage.googleapis.com/zenn-user-upload/eb9a9379e624-20221019.png)
 
-
 そして material.dart と cupertino.dart をよく見てみると、両方とも widgets.dart を `export` しています。
 
 ![](https://storage.googleapis.com/zenn-user-upload/ac4657923adf-20221020.png)
@@ -110,9 +110,7 @@ widgets.dart では Material でも Cupertino でもない共通の widget（Tex
 
 つまり、どちらか一方でも `import` すれば widgets.dart 内のクラスも参照できているというわけですね。（まさに冒頭の図のイメージ）
 
-
 ![](https://storage.googleapis.com/zenn-user-upload/a8d1cca994a9-20221020.png)
-
 
 ## まとめ
 
@@ -127,5 +125,3 @@ widgets.dart では Material でも Cupertino でもない共通の widget（Tex
 https://dart.dev/guides/language/language-tour#libraries-and-visibility
 
 https://dart.dev/guides/libraries/create-library-packages
-
-

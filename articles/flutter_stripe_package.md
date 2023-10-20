@@ -2,39 +2,41 @@
 title: "【FlutterFire × Stripe】flutter_stripe パッケージで楽々カード決済"
 emoji: "💳"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ['Flutter','Firebase','Stripe','TypeScript','Nodejs']
+topics: ["Flutter", "Firebase", "Stripe", "TypeScript", "Nodejs"]
+publication_name: "flutteruniv_dev"
 published: true
 ---
 
-この記事は、[Flutter 大学アドベントカレンダー 2022](https://qiita.com/advent-calendar/2022/flutteruniv) 1日目の記事です。
+この記事は、[Flutter 大学アドベントカレンダー 2022](https://qiita.com/advent-calendar/2022/flutteruniv) 1 日目の記事です。
 
 ## はじめに
 
 はじめまして、ダイゴです。
 
-12月、今年もアドベントカレンダーの季節が始まりましたね。
+12 月、今年もアドベントカレンダーの季節が始まりましたね。
 
 今回は、個人的に前から気になっていた [**flutter_stripe**](https://pub.dev/packages/flutter_stripe) パッケージを触って、**シンプルなカード決済機能（PaymentSheet）** を実装してみました。
 
 サンプルアプリも作成したので、ぜひこちらも合わせて参考にしていただけると幸いです。
 
-![](https://storage.googleapis.com/zenn-user-upload/ec0803714d66-20221201.gif =250x) 
+![](https://storage.googleapis.com/zenn-user-upload/ec0803714d66-20221201.gif =250x)
 
 https://github.com/DaigoWakabayashi/flutter_stripe_example
 
 ## 目次
 
-1. パッケージのインストール・両OSでのセットアップ
+1. パッケージのインストール・両 OS でのセットアップ
 2. Stripe アカウントの作成 & Publishable Key の発行
 3. サーバー側の実装（Cloud Functions）
 4. クライアント側の実装（Flutter）
+
 ```
 [✓] Flutter (Channel stable, 3.3.5, on macOS 13.0)
     • Flutter version 3.3.5 on channel stable
     • Dart version 2.18.2
 ```
 
-## 1. パッケージのインストール・両OSでのセットアップ
+## 1. パッケージのインストール・両 OS でのセットアップ
 
 まずはパッケージのセットアップをしていきます。
 
@@ -50,15 +52,16 @@ dependencies:
 + flutter_stripe: ^7.0.0
 ```
 
-### iOSの設定
+### iOS の設定
 
 Xcode を開いて
+
 - Runner > Project Runner > Deployment Target > iOS Deployment Target
-- Runner > Targets Runner > Minimum Deployments > Minimum Deployments > iOS 
+- Runner > Targets Runner > Minimum Deployments > Minimum Deployments > iOS
 
 を 12.0 以上に指定します。
 
-### Androidの設定
+### Android の設定
 
 1. **Android SDK のバージョン指定**
 
@@ -82,7 +85,7 @@ android {
     }
 ```
 
-ちなみに、flutter.〇〇SdkVersion の値は `flutter_sdk/packages/flutter_tools/gradle/flutter.gradle` で確認可能なので、そちらの値が ↑ 以上になっていれば flutter.〇〇SdkVersion のままで問題ありません。
+ちなみに、flutter.〇〇 SdkVersion の値は `flutter_sdk/packages/flutter_tools/gradle/flutter.gradle` で確認可能なので、そちらの値が ↑ 以上になっていれば flutter.〇〇 SdkVersion のままで問題ありません。
 
 2. **Kotlin のバージョン指定**
 
@@ -130,7 +133,7 @@ buildscript {
 
 ```diff kt
   package com.example.flutter_stripe_example
-  
+
   import io.flutter.embedding.android.FlutterActivity
 + import io.flutter.embedding.android.FlutterFragmentActivity
 
@@ -157,19 +160,20 @@ https://dashboard.stripe.com/login?redirect=%2Fdashboard
 
 ![](https://storage.googleapis.com/zenn-user-upload/693d237aa62e-20221105.png)
 
-
 :::message
+
 - Stripe の新規アカウント発行時は「テスト環境」となっており、テストのクレジットカードを使って擬似的な決済を走らせることができる状態です。
 - 実際にお金を動かすには [本番環境への利用申請](https://dashboard.stripe.com/account/onboarding/business-structure) が必要ですが、本記事では省略しています。
-:::
+  :::
 
 ## 3. サーバー側の実装（Cloud Functions）
 
 flutter_stripe で想定されている決済手法には
+
 - [PaymentSheet（と PaymentIntent）](https://docs.page/flutter-stripe/flutter_stripe/sheet)
 - [CardForm（と PaymentIntent）](https://docs.page/flutter-stripe/flutter_stripe/card_field)
 
-の2つがあるのですが、公式が推奨している & サーバー側の実装が比較的簡単な [PaymentSheet](https://docs.page/flutter-stripe/flutter_stripe/sheet) による決済を実装していきます。
+の 2 つがあるのですが、公式が推奨している & サーバー側の実装が比較的簡単な [PaymentSheet](https://docs.page/flutter-stripe/flutter_stripe/sheet) による決済を実装していきます。
 
 どちらにせよ、サーバー側で [PaymentIntent](https://stripe.com/docs/api/payment_intents) のエンドポイントを作成する必要があるので、今回は Cloud Functions を使った上記のエンドポイント作成例を紹介します。
 
@@ -238,7 +242,9 @@ export const createPaymentIntent = functions.https.onCall(async (_, __) => {
   }
 });
 ```
+
 上記に登場する Stripe リソースは以下のような役割があります。
+
 - [Customer](https://stripe.com/docs/api/customers)
   - Stripe 上の顧客、お金を支払う人（ユーザー）
   - カード情報などの決済手段を持つことができる
@@ -251,6 +257,7 @@ export const createPaymentIntent = functions.https.onCall(async (_, __) => {
 今回の例では決済ごとに Customer オブジェクトを作成していますが、実際のサービスであればクライアント側から受け取った CustomerId などを使って PaymentIntent を作成することになるかと思います。
 
 ## 4. クライアント側の実装（Flutter）
+
 最後に Flutter（クライアント）側の実装をしていきます。
 main 関数内で Stripe パッケージの publishableKey 設定と、Cloud Functions を呼び出せるように Firebase の初期化を行います。（Firebase の初期化は [FlutterFire CLI](https://firebase.google.com/docs/flutter/setup?platform=ios) を使えば楽です）
 
@@ -267,16 +274,18 @@ void main() async {
   runApp(const App());
 }
 ```
+
 ### PaymentSheet の表示
 
 準備が整ったので、PaymentSheet を表示します。
 
 PaymentSheet に関わるメソッドは
+
 - `initPaymentSheet`（PaymentSheet の初期化）
 - `presentPaymentSheet`（PaymentSheet の表示）
 - `confirmPaymentSheetPayment`（決済内容の確定）
 
-の3つです。
+の 3 つです。
 全体のコードは以下になります。
 
 ```dart
@@ -356,11 +365,9 @@ class PaymentSheetPage extends HookWidget {
 
 ![](https://storage.googleapis.com/zenn-user-upload/6f2060cbc89e-20221201.png)
 
-
 テスト用のカード番号は以下のドキュメントにまとまっているので、決済エラーやカードブランドごとに検証をする場合はこちらを参考にしてください。
 
 https://stripe.com/docs/testing#cards
-
 
 ## まとめ
 
@@ -377,12 +384,8 @@ https://opencollective.com/flutter_stripe
 
 https://github.com/DaigoWakabayashi/flutter_stripe_example
 
-
 ## 参考
 
 https://stripe.com/docs
 
 https://docs.page/flutter-stripe/flutter_stripe/sheet
-
-
-

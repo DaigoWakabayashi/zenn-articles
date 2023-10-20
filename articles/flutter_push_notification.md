@@ -2,7 +2,8 @@
 title: Flutter × FCMでプッシュ通知を実装する
 emoji: "🐯"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ['Flutter','Firebase','CloudMessaging']
+topics: ["Flutter", "Firebase", "CloudMessaging"]
+publication_name: "flutteruniv_dev"
 published: true
 ---
 
@@ -15,11 +16,10 @@ Flutter で [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-me
 本記事では、**パッケージのインポート** **〜** **テスト通知を受け取る** までの流れをまとめています。
 どなたかの参考になれば幸いです。
 
-
 :::message
 前提として
 
-1. [Apple Developer](https://developer.apple.com/jp/programs/) アカウント（99米ドル ≒ 11,800円 / 年）
+1. [Apple Developer](https://developer.apple.com/jp/programs/) アカウント（99 米ドル ≒ 11,800 円 / 年）
 2. iOS の実機デバイス（iOS シミュレータでは通知が動作しないので）
 
 が必要です。
@@ -31,6 +31,7 @@ Flutter で [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-me
 dependencies:
   firebase_messaging: ^11.2.8
 ```
+
 プロジェクトの `pubspec.yaml`ファイルに、任意の[`firebase_messaging`](https://pub.dev/packages/firebase_messaging)バージョンを追記し、`pub get` します。
 
 ## 2. iOS のセットアップ
@@ -39,13 +40,14 @@ dependencies:
 
 - **Xcode の設定**
 - **APNs と FCM の繋ぎこみ**
-   - APNs キーを Firebase に登録
-   - App Identifier の生成
-   - Provisioning Profile の登録
+  - APNs キーを Firebase に登録
+  - App Identifier の生成
+  - Provisioning Profile の登録
 
 の順で解説していきます。
 
 ### Xcode の設定
+
 まずは、Xcode の capability（アプリが持つ機能）に
 
 - **「Push Notifications」**
@@ -61,11 +63,11 @@ Xcode を開き、
 
 ![](https://storage.googleapis.com/zenn-user-upload/dd3a497dd08c-20220228.png)
 
-その後、**①「＋capability」ボタン** から、**②Push Notifications** を選択することで、通知の設定が有効になります。
+その後、**①「＋ capability」ボタン** から、**②Push Notifications** を選択することで、通知の設定が有効になります。
 
 ![](https://storage.googleapis.com/zenn-user-upload/b7a70d90983f-20220228.png)
 
-Background Modes も同様に、**①「＋capability」ボタン** から、**②Background Modes** を選択し有効化し、
+Background Modes も同様に、**①「＋ capability」ボタン** から、**②Background Modes** を選択し有効化し、
 
 ![](https://storage.googleapis.com/zenn-user-upload/d1253df0f424-20220228.png)
 
@@ -93,7 +95,7 @@ APNs(Apple Push Notification service)と FCM（Firebase Cloud Messaging)の繋�
 
 ![](https://storage.googleapis.com/zenn-user-upload/3f942212f98f-20220228.png)
 
-Key Name に適当な名前をつけて、APNsにチェックを入れます。
+Key Name に適当な名前をつけて、APNs にチェックを入れます。
 
 ![](https://storage.googleapis.com/zenn-user-upload/38bf166c252c-20220228.png)
 
@@ -101,12 +103,10 @@ Continue を押すと確認画面が表示されるので、内容を確認し�
 
 ![](https://storage.googleapis.com/zenn-user-upload/05973915600d-20220228.png)
 
-**① Key ID をコピー**しておき、**②ファイルをダウンロード**します。（再ダウンロードは出来ない点に注意しましょう）
-
+**① Key ID をコピー**しておき、**② ファイルをダウンロード**します。（再ダウンロードは出来ない点に注意しましょう）
 
 ![](https://storage.googleapis.com/zenn-user-upload/2f5d097803e9-20220228.png)
 これで、APNs の Key を生成出来ました。
-
 
 次に、生成した Key を Firebase プロジェクトに登録していきます。
 [**Firebase コンソール**](https://console.firebase.google.com/u/0/) から、**プロジェクトの設定 > Cloud Messaging** を開きます。
@@ -119,7 +119,7 @@ Continue を押すと確認画面が表示されるので、内容を確認し�
 
 - **① Key ファイル（先程生成したもの）**
 - **② Key ID（先程コピーしたもの）**
-- **③ Team ID（[AppleDeveloper](https://developer.apple.com/account/resources/certificates/list)ページ右上の8桁くらいのID）**
+- **③ Team ID（[AppleDeveloper](https://developer.apple.com/account/resources/certificates/list)ページ右上の 8 桁くらいの ID）**
 
 を入力し、アップロードします。
 
@@ -131,7 +131,7 @@ Continue を押すと確認画面が表示されるので、内容を確認し�
 
 #### 2. App Identifier の生成
 
-次に、App Identifier（バンドルIDやアプリの機能などをまとめた識別情報）を生成します。
+次に、App Identifier（バンドル ID やアプリの機能などをまとめた識別情報）を生成します。
 
 [**Certificates, Identifiers & Profiles**](https://developer.apple.com/account/resources/certificates/list) > **Identifiers** > **＋ ボタン**を選択
 
@@ -149,17 +149,15 @@ Continue を押すと確認画面が表示されるので、内容を確認し�
 
 #### 3. Provisioning Profile の生成
 
-最後に Provisioning Profile（AppID や Keyなどの情報をまとめたファイル）を生成し、アプリ側に登録していきます。
+最後に Provisioning Profile（AppID や Key などの情報をまとめたファイル）を生成し、アプリ側に登録していきます。
 
 [**Certificates, Identifiers & Profiles**](https://developer.apple.com/account/resources/certificates/list) > **Profiles** > ＋ ボタンを選択
 
 ![](https://storage.googleapis.com/zenn-user-upload/bb8d69e178b5-20220228.png)
 
-
 開発版であれば **iOS App Development**、本番用であれば **App Store** を選択します。
 
 ![](https://storage.googleapis.com/zenn-user-upload/991a2bb1eeea-20220228.png)
-
 
 AppID は、先程生成した App ID を選択します。
 
@@ -185,18 +183,14 @@ Profile の名前を記入し、
 
 Xcode の **①Runner** > **②Target Runner** > **③Signing & Capabilities** を開き、**Provisioning Profile** の欄で、先程ダウンロードした Profile を選択します。
 
-
 ![](https://storage.googleapis.com/zenn-user-upload/5e15b35eef15-20220228.png)
-
 
 少し長かったですが、これで一通りのセットアップが完了しました。
 
 :::details 画像付き通知を実装したい場合
 追加の設定が必要です。
-今回は解説できませんでしたが、[公式Doc](https://firebase.flutter.dev/docs/messaging/apple-integration/#advanced-optional-allowing-notification-images)で詳しく解説されているので、そちらをご覧ください🙏
+今回は解説できませんでしたが、[公式 Doc](https://firebase.flutter.dev/docs/messaging/apple-integration/#advanced-optional-allowing-notification-images)で詳しく解説されているので、そちらをご覧ください 🙏
 :::
-
-
 
 ## 3. 通知の送信
 
@@ -204,7 +198,6 @@ Xcode の **①Runner** > **②Target Runner** > **③Signing & Capabilities** �
 
 ようやくアプリ側の実装を進めて行きます。
 main.dart 内の関数で通知の権限をリクエストしてみます。
-
 
 ```dart
     // FCM の通知権限リクエスト
@@ -244,7 +237,6 @@ enum AuthorizationStatus {
 ```
 
 https://firebase.flutter.dev/docs/messaging/permissions/
-
 
 権限が承認したら、最後に、トークンを使ったテスト通知で動作を確認してみます。
 
@@ -286,19 +278,17 @@ https://firebase.flutter.dev/docs/messaging/permissions/
 
 ![](https://storage.googleapis.com/zenn-user-upload/a3de03d9d666-20220228.png)
 
-
 アプリを **Background** 状態にすることで、通知が表示されました 🎉
 
 ![](https://storage.googleapis.com/zenn-user-upload/7ac3bc1ad2c2-20220228.jpeg =250x)
 
-**Foregroud** 状態で通知を表示するには少し設定が必要なので、[公式ドキュメント](https://firebase.flutter.dev/docs/messaging/notifications#foreground-notifications)を参考に実装をしてみて下さい🙏
+**Foregroud** 状態で通知を表示するには少し設定が必要なので、[公式ドキュメント](https://firebase.flutter.dev/docs/messaging/notifications#foreground-notifications)を参考に実装をしてみて下さい 🙏
 
 | **状態**       | **説明**                                                                                                                                                                                                                   |
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Foreground** | アプリケーションを開いているとき、表示中＆使用中の状態。                                                                                                                                                                   |
 | **Background** | アプリケーションを開いているが、バックグラウンドにある（最小化されている）状態。ユーザーがデバイスの「ホーム」ボタンを押したり、アプリケーションスイッチャーで別のアプリケーションに切り替えたりした場合にこの状態になる。 |
 | **Terminated** | 端末がロックされているとき、アプリケーションを起動していない状態。                                                                                                                                                         |
-
 
 ## さいごに
 
@@ -313,7 +303,6 @@ https://firebase.flutter.dev/docs/messaging/permissions/
 https://firebase.google.com/docs/cloud-messaging
 
 https://firebase.flutter.dev/docs/messaging/usage
-
 
 ## お世話になっているコミュニティ
 
