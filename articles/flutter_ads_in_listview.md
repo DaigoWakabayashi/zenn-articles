@@ -3,6 +3,7 @@ title: "【Flutter × AdMob】ListView内でバナー広告を表示する"
 emoji: "🎉"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Flutter", "Firebase", "AdMob"]
+publication_name: "flutteruniv_dev"
 published: true
 ---
 

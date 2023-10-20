@@ -2,7 +2,8 @@
 title: "【Flutter開発Tips】自動生成ファイルの diff をプルリクに表示しないようにする"
 emoji: "🎉"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ['GitHub','Flutter',]
+topics: ["GitHub", "Flutter"]
+publication_name: "flutteruniv_dev"
 published: true
 ---
 
@@ -12,11 +13,7 @@ published: true
 
 そんな便利なコード生成ツールですが、生成されたファイルの記述量が多く、プルリクの diff を見る時にちょっぴり邪魔だったりします。
 
-
-
 ![](https://storage.googleapis.com/zenn-user-upload/f40bd6fe9b53-20220509.png)
-
-
 
 ignore するべきファイルでも無いと思うので、縮小した形で表示出来れば嬉しいですね。
 
@@ -33,7 +30,6 @@ ignore するべきファイルでも無いと思うので、縮小した形で�
 ```
 
 こうすることで、自動生成ファイルの diff が表示されなくなりました 🎉
-
 
 ![](https://storage.googleapis.com/zenn-user-upload/23a961e96cad-20220509.png)
 

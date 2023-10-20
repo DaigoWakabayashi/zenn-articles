@@ -3,6 +3,7 @@ title: "【Flutter】初の個人開発で『ネコ補給アプリ』をリリ�
 emoji: "🐱"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Flutter", "Firebase", "TwitterAPI"]
+publication_name: "flutteruniv_dev"
 published: true
 ---
 

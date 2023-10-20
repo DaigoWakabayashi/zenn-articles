@@ -3,6 +3,7 @@ title: "【Flutter】SVGが黒く表示されてしまう時の対処法"
 emoji: "📘"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Flutter"]
+publication_name: "flutteruniv_dev"
 published: true
 ---
 

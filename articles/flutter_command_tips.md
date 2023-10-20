@@ -3,6 +3,7 @@ title: "【Flutter】個人的「なんかあったらコレ」リスト"
 emoji: "📝"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Flutter", "iOS", "XCode"]
+publication_name: "flutteruniv_dev"
 published: true
 ---
 

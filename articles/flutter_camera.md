@@ -2,7 +2,8 @@
 title: "【Flutter】カメラ機能を実装する"
 emoji: "📷"
 type: "tech"
-topics: ['Flutter','iOS','Android']
+topics: ["Flutter", "iOS", "Android"]
+publication_name: "flutteruniv_dev"
 published: true
 ---
 
@@ -10,14 +11,13 @@ published: true
 
 こんにちは、[ダイゴ](https://twitter.com/Mamushi_journey)です。
 
-初学者の頃からずっとお世話になっている[Flutter大学](https://flutteruniv.com/)で、今年の4月から、 zoom での質問回答を行う講師として活動を始めました。
+初学者の頃からずっとお世話になっている[Flutter 大学](https://flutteruniv.com/)で、今年の 4 月から、 zoom での質問回答を行う講師として活動を始めました。
 
 先日の質問 zoom で、カメラ機能関連の質問があり、「そういえばカメラ機能の実装したことないな」と思い、簡単なカメラアプリを作成し、記事にしました。
 
 サンプルプロジェクトも公開しているので、こちらも合わせて参考にしていただけると幸いです。
 
 https://github.com/DaigoWakabayashi/flutter_camera_example
-
 
 ## この記事でやっていること
 
@@ -35,22 +35,20 @@ https://github.com/DaigoWakabayashi/flutter_camera_example
 4. 写真を取る
 5. 画像を表示（`Image` Widget）
 
-
 https://docs.flutter.dev/cookbook/plugins/picture-using-camera
-
 
 ## 1. パッケージの追加
 
 まずは、カメラ機能に関連する 3 つのパッケージをインポートします。
 
 - [camera](https://pub.dev/packages/camera)
-デバイス上のカメラを操作するためのツール。
+  デバイス上のカメラを操作するためのツール。
 
 - [path_provider](https://pub.dev/packages/path_provider)
-画像の保存場所を見つけ出してくれる。
+  画像の保存場所を見つけ出してくれる。
 
 - [path](https://pub.dev/packages/path)
-画像の保存場所を作成してくれる。
+  画像の保存場所を作成してくれる。
 
 上記のパッケージを、`pubspec.yaml` ファイルに追加し、`flutter pub get` します。（fvm を使っている場合は prefix をつけましょう）
 
@@ -65,8 +63,8 @@ dependencies:
 
 [camera](https://pub.dev/packages/camera)パッケージを正しく動作させるためには
 
- - Android の minSdkVersion を 21 以上に設定
- - iOS の `ios/Runner/Info.plist` に権限要求時の文言を追加
+- Android の minSdkVersion を 21 以上に設定
+- iOS の `ios/Runner/Info.plist` に権限要求時の文言を追加
 
 する必要があるので、各々設定していきます。
 
@@ -104,7 +102,7 @@ dependencies:
  </plist>
 ```
 
-↑は、こんな感じで表示されます。
+↑ は、こんな感じで表示されます。
 
 ![](https://storage.googleapis.com/zenn-user-upload/186202038ab4-20220414.png =250x)
 
@@ -150,7 +148,6 @@ flutter: CameraDescription(0, CameraLensDirection.back, 90)
 Android Emulator は試していませんが、エミュレータ等でカメラが起動できたとしても何が映るんだという感じなので、実機でデバッグすることをおすすめします。
 
 ## 3. プレビューを表示する
-
 
 プレビューを表示するには、`CameraController`（撮影などのメソッドを持つクラス）の初期化が必要です。
 
@@ -263,6 +260,7 @@ FloatingActionButton を設置し、onPressed 内で `takePicture` を呼び出�
     );
   }
 ```
+
 ボタンを押すといつもの「カシャッ」というシャッター音が鳴り、以下のような path が出力されます。
 
 ```
@@ -296,7 +294,7 @@ class DisplayPictureScreen extends StatelessWidget {
 
 写真撮影後に上記の画面へ遷移するようにします。
 
-```dart 
+```dart
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           // 写真を撮る
@@ -313,12 +311,12 @@ class DisplayPictureScreen extends StatelessWidget {
       ),
 ```
 
-これでカメラ撮影と表示が出来ました🎉
+これでカメラ撮影と表示が出来ました 🎉
 
 ![](https://storage.googleapis.com/zenn-user-upload/c3fe91fea82b-20220414.gif)
 
+:::details コード全体（124 行）
 
-:::details コード全体（124行）
 ```dart
 import 'dart:io';
 
@@ -441,6 +439,7 @@ class DisplayPictureScreen extends StatelessWidget {
   }
 }
 ```
+
 :::
 
 ## さいごに
@@ -448,8 +447,8 @@ class DisplayPictureScreen extends StatelessWidget {
 なんだかネイティブ依存の機能実装難しそう、、と思っていましたが、
 パッケージ使うと意外と簡単にカメラ機能を実装できるもんだなぁと感じました。
 
-
 `CameraController` 内部を見ている感じだと、写真撮影の他にも
+
 - ズーム調節
 - ピント設定
 - カメラ情報のリアルタイムリッスン（Stream）
@@ -462,10 +461,7 @@ class DisplayPictureScreen extends StatelessWidget {
 
 https://github.com/DaigoWakabayashi/flutter_camera_example
 
-
 最後までご覧頂きありがとうございました。
-
-
 
 ## 参考
 
