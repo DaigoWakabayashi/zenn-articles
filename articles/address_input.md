@@ -1,6 +1,6 @@
 ---
 title: "【Flutter】気持ちよい住所入力を目指して"
-emoji: "😺"
+emoji: "💙"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Flutter", "Firebase", "Firestore", "FirebaseExtensions"]
 published: false
@@ -12,37 +12,42 @@ published: false
 
 ダイゴです。
 
+とあるアプリを触っていた時に気持ちよくない住所入力を体験したので、Flutter でどうすれば気持ちよくできるかを考え、実装してみました。
+
 どなたかの参考になれば幸いです。
 
-### 環境・対象プラットフォーム
+### 環境
 
-```shell
-[✓] Flutter (Channel stable, 3.16.0)
-[✓] Xcode - develop for iOS and macOS (Xcode 15.0)
-```
+- [✓] Flutter (Channel stable, 3.16.0)
+- [✓] 対象プラットフォームはモバイル（iOS・Android）
 
-### サンプルコード
+https://github.com/DaigoWakabayashi/flutter_address_input
 
 ### 目次
 
-## 1. 実装方針
+## 1. Flutter での住所入力
+
+まず、気持ちよい住所入力とは
 
 - 「とにかく速く」
 - 「バリデーションは緩く」
 
-### i. フォーカス管理とバリデーション
+### フォーカス管理
 
-### ii. 郵便番号の autoFill
+- onTapOutside
 
-## 2. FirebaseExtension で住所バリデーション（日本非対応・番外編）
+### バリデーション
 
-本当はこちらを主題に持ってこようかと思っていたのですが、実装を進めた後に **日本では非対応であることに気づいた** ので、
-日本人が同じ轍を踏まないよう、そして、海外の方のためになるよう、そして、いつか日本に対応した時に少しでも参考になるようにと、念の為、記録を残しておきます。
+### 郵便番号の autoFill
 
-:::message alert
+## 2. FirebaseExtension で住所検証（日本非対応・番外編）
 
-- この拡張機能は、日本では対応していません。
-- 対応国は[こちら](https://developers.google.com/maps/documentation/address-validation/coverage?hl=en)
+本当はこちらを主題に持ってこようかと思っていたのですが、実装を進めた後に **日本では非対応であることに気づいた** （愚か）ので、グローバルプロジェクトを開発している方へ、そしていつか日本に対応した時に少しでも参考になるようにと、念の為記録を残しておきます。
+
+:::message
+
+- これから紹介する [Validate Address in Firestore](https://extensions.dev/extensions/googlemapsplatform/firestore-validate-address) は、日本の住所には対応していません。
+- 対応国は [こちら](https://developers.google.com/maps/documentation/address-validation/coverage?hl=en)
 
 :::
 
@@ -50,26 +55,43 @@ published: false
 
 [Validate Address in Firestore](https://extensions.dev/extensions/googlemapsplatform/firestore-validate-address) とは、Firestore 上に保存された住所データの **有効性をチェック** してくれる FirebaseExtension です。
 
-この拡張機能を使うことで、クライアント側でのバリデーションを最低限に抑えつつ、手軽に「不正な住所の混入」を防ぐことができます。
+この拡張機能を使うことで、クライアント側でのバリデーションを最低限に抑えつつ、手軽に「不正な住所の混入」「タイプミスなどの誤入力」を防ぐことができ、例えば下記のようなベネフィットを得ることができます。
+
+- 配送関連：配送の失敗や誤配送、注文のキャンセルや再配達のようなコストのかかる問題を減らす。
+- 金融関連：新規口座開設者の認証に住所証明を利用できる。口座開設時に顧客の住所が存在することを確認することで、不正登録を検出できる。
+
+![](https://storage.googleapis.com/zenn-user-upload/0b9845275b49-20231130.png)
+
+かといって自作で完全な有効性検証を実装するのは、特に日本だと難易度が高いです。無理に厳しいバリデーションを加えてしまうと、例外的な住所に対応できなくなります。（この辺りは X(Twitter) などでも[度々話題](https://togetter.com/li/2161880)になっている）
+
+- [日本の住所の正規化に本気で取り組んでみたら大変すぎて鼻血が出た。- Qiita](https://qiita.com/miya0001/items/598070abcdf0799daebc)
+- [とにかく日本の住所のヤバさをもっと知るべきだと思います - note](https://note.com/inuro/n/n7ec7cf15cf9c)
+- [うわっ…日本の住所表記、ヤバすぎ…？解決策をダラダラ語る会 - YouTube](https://www.youtube.com/watch?v=XF1wvbWF0Q8)
+
+この Extension が日本に対応できていないのも、上記のような特殊な日本の住所事情が絡んでいるからかも知れませんね。
+では、実際の導入方法を紹介します。
 
 ### 2. Extension のインストール
 
 はじめに Extension のページにある ↓ のボタンから
 
-画像
-
-画像
+![](https://storage.googleapis.com/zenn-user-upload/f36a00c3b6d6-20231130.png)
 
 対象のプロジェクトを選び、拡張機能をインストールします。
+
+![](https://storage.googleapis.com/zenn-user-upload/0bd86464e991-20231130.png)
+
 諸々の必須機能を有効化したのち、最後に
 
 1. Addresses Collection → なんでも良いですが今回は addresses に指定
 2. Google Address Validation API Key → GCP の[Credentials](https://console.cloud.google.com/apis/credentials) から作成
 3. Cloud Functions location → 近い方が良さそうなので asia-northeast1(Tokyo) リージョンに指定
 
+![](https://storage.googleapis.com/zenn-user-upload/ba07003d4889-20231130.png)
+
 を入力してから、数分するとインストールが完了します。
 
-### 3. 対応国の住所を入れる
+### 3. 使ってみる
 
 **有効性が高い場合**
 
