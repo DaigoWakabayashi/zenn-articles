@@ -169,14 +169,13 @@ class Address {
 
 これが何も設定されていないアプリでは、住所 ① 入力 → 次のフィールドタップ → 住所 ② 入力 → 次のフィールドタップ... といった具合に、入力とフィールドタップを繰り返さなければいけません。ちょっとだけ気持ちよくないです。
 
-単純に上から下へ（正確には [FocusTraversal](https://api.flutter.dev/flutter/widgets/FocusTraversalGroup-class.html) 順）とフォーカスを当てていく分には [`FocusScope.of(context).nextFocus()`](https://api.flutter.dev/flutter/widgets/FocusNode/nextFocus.html) メソッドで良いのですが、今回は自動入力
-の対応もあるので、入力フィールドごとに FocusNode を作成して、フォーカスのリクエストを送ります。
+単純に上から下へ（正確には [FocusTraversal](https://api.flutter.dev/flutter/widgets/FocusTraversalGroup-class.html) 順）とフォーカスを当てていく分には [`FocusScope.of(context).nextFocus()`](https://api.flutter.dev/flutter/widgets/FocusNode/nextFocus.html) メソッドで良いのですが、今回は自動入力の対応もあるので、入力フィールドごとに FocusNode を作成して、フォーカスのリクエストを送ります。
 
 今回のサンプルでは、
 
-1. キーボードの完了ボタンで上から下に自動でフォーカスが当たっていく 2.自動入力
-   があった時は、適切なフィールドまでフォーカスを飛ばす
-2. もしテキストフィールド外をタップした場合はフォーカスを外す（onTapOutSide）
+1. キーボードの完了ボタンで上から下に自動でフォーカスが当たっていく
+2. 自動入力があった時は、適切なフィールドまでフォーカスを飛ばす
+3. もしテキストフィールド外をタップした場合はフォーカスを外す（onTapOutSide）
 
 を実装しています。
 
@@ -209,6 +208,9 @@ class AddPage extends HookWidget {
               autofocus: true,
               controller: zipcodeController,
               decoration: const InputDecoration(labelText: '郵便番号'),
+              // もしテキストフィールド外をタップした場合はフォーカスを外す
+              // Outside と言っても、他の TextField の TapRegion は侵さないので、ひとつ指定するだけでも OK
+              onTapOutside: (_) => FocusScope.of(context).unfocus(),
               keyboardType: TextInputType.number,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(7),
@@ -224,6 +226,7 @@ class AddPage extends HookWidget {
                       Prefecture.values.byCode(result.prefcode);
                   address2Controller.text = result.address2;
                   address3Controller.text = result.address3;
+                  // 自動入力があった時は、address3 のフィールドまでフォーカスを飛ばす
                   address3FocusNode.requestFocus();
                 } else {
                   // しなければ SnackBar 表示（ダイアログ等でフローを止めないようにする）
