@@ -30,15 +30,140 @@ https://github.com/DaigoWakabayashi/flutter_address_input
 
 まず「気持ちよい住所入力 ≒ 速く正しい住所入力」であることを念頭において、どういった工夫ができるか考えた結果、下記 3 つがあれば、ある程度気持ちよくなれそうだという結論に至りました。
 
-- 郵便番号の AutoFill
+- 郵便番号からの AutoFill
 - バリデーション
 - フォーカスの管理
 
 ひとつずつ、サンプルコードを紹介しながら解説します。
 
-### 郵便番号の AutoFill
+### 郵便番号からの AutoFill
+
+郵便番号からの AutoFill とは、入力された 7 桁の郵便番号を元に API を叩き、確実にわかるところまで住所を自動で埋める、といった実装です。
+
+複数の外部 API サービスがあるようでしたが、一番ポピュラーかつ無料らしい [zipcloud の郵便番号検索 API](http://zipcloud.ibsnet.co.jp/doc/api) を使用してみました。
+
+https://qiita.com/megane_/items/c8e4062697eaa785a103
+
+該当するコードはこちら。Flutter 大学の逆引き辞典に少し手を加えた実装です。
+
+```dart:住所クラス
+/// 住所にあたるモデルクラス
+/// プロパティ名は API のレスポンスに合わせている
+class Address {
+  /// 郵便番号
+  /// 7桁の数字、ハイフンなし
+  final String zipcode;
+
+  /// 都道府県コード
+  final String prefcode;
+
+  /// 都道府県名
+  final String address1;
+
+  /// 市区町村名
+  final String address2;
+
+  /// 町域名
+  final String address3;
+
+  /// 建物名
+  final String? address4;
+
+  Address({
+    required this.zipcode,
+    required this.prefcode,
+    required this.address1,
+    required this.address2,
+    required this.address3,
+    required this.address4,
+  });
+
+  factory Address.fromJson(Map<String, dynamic> json) {
+    return Address(
+      zipcode: json['zipcode'],
+      prefcode: json['prefcode'],
+      address1: json['address1'],
+      address2: json['address2'],
+      address3: json['address3'],
+      address4: json['address4'],
+    );
+  }
+}
+
+```
+
+```dart: 検索関数
+Future<Address?> _searchAddress(String zipcode) async {
+  final response = await http.get(
+    Uri.parse('https://zipcloud.ibsnet.co.jp/api/search?zipcode=$zipcode'),
+  );
+  // 正常なレスポンスのみ処理
+  if (response.statusCode != 200) {
+    return null;
+  }
+  // パースして結果の配列を取得
+  final body = jsonDecode(response.body) as Map<String, dynamic>;
+  final results = body['results'] as List?;
+  if (results == null || results.isEmpty) {
+    return null;
+  }
+  // 複数の住所のうち、先頭の住所を使う
+  final json = results.first as Map<String, dynamic>;
+  final address = Address.fromJson(json);
+  return address;
+}
+```
+
+```dart:呼び出し側
+class AddPage extends HookWidget {
+  const AddPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+
+    final zipcodeController = useTextEditingController();
+    final address1State = useState<Prefecture?>(null);
+    final address2Controller = useTextEditingController();
+    final address3Controller = useTextEditingController();
+    final address4Controller = useTextEditingController();
+
+    return Scaffold(
+      appBar: AppBar(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Gap(16),
+            TextFormField(
+              autofocus: true,
+              controller: zipcodeController,
+              decoration: const InputDecoration(labelText: '郵便番号'),
+              onChanged: (zipcode) async {
+                // 7 桁になったら住所検索
+                if (zipcode.length != 7) return;
+                final result = await _searchAddress(zipcode);
+                // ヒットすれば address3 まで入力
+                if (result != null) {
+                  address1State.value =
+                      Prefecture.values.byCode(result.prefcode);
+                  address2Controller.text = result.address2;
+                  address3Controller.text = result.address3;
+                } else {
+                  // しなければ SnackBar 表示（ダイアログ等でフローを止めないようにする）
+                  scaffoldMessengerKey.currentState?.showSnackBar(
+                    const SnackBar(content: Text('該当する住所が見つかりませんでした')),
+                  );
+                }
+              },
+            ),
+            const Gap(8),
+
+```
 
 ### バリデーション
+
+次に
 
 ### フォーカスの管理
 
