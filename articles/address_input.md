@@ -31,8 +31,8 @@ https://github.com/DaigoWakabayashi/flutter_address_input
 まず「気持ちよい住所入力 ≒ 速く正しい住所入力」であることを念頭において、どういった工夫ができるか考えた結果、下記 3 つがあれば、ある程度気持ちよくなれそうだという結論に至りました。
 
 - 郵便番号からの AutoFill
-- バリデーション
 - フォーカスの管理
+- 入力可能な値の絞り込み
 
 ひとつずつ、サンプルコードを紹介しながら解説します。
 
@@ -105,7 +105,7 @@ class AddPage extends HookWidget {
                   address3Controller.text = result.address3;
                 } else {
                   // しなければ SnackBar 表示（ダイアログ等でフローを止めないようにする）
-                  scaffoldMessengerKey.currentState?.showSnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('該当する住所が見つかりませんでした')),
                   );
                 }
@@ -164,6 +164,156 @@ class Address {
 ```
 
 :::
+
+### フォーカスの管理
+
+フォーカスとは、特定の入力フィールドに対してキーボードが出て、入力可能な状態のことです。
+
+これが何も設定されていないアプリでは、住所 ① 入力 → 次のフィールドタップ → 住所 ② 入力 → 次のフィールドタップ... といった具合に、入力とフィールドタップを繰り返さなければいけません。ちょっとだけ気持ちよくないです。
+
+単純に上から下へ（正確には [FocusTraversal](https://api.flutter.dev/flutter/widgets/FocusTraversalGroup-class.html) 順）とフォーカスを当てていく分には [`FocusScope.of(context).nextFocus()`](https://api.flutter.dev/flutter/widgets/FocusNode/nextFocus.html) メソッドで良いのですが、今回は AutoFill の対応もあるので、入力フィールドごとに FocusNode を作成して、フォーカスのリクエストを送ります。
+
+今回のサンプルでは、
+
+1. キーボードの完了ボタンで上から下に自動でフォーカスが当たっていく
+2. AutoFill があった時は、適切なフィールドまでフォーカスを飛ばす
+3. もしテキストフィールド外をタップした場合はフォーカスを外す（onTapOutSide）
+
+を実装しています。
+
+```dart
+class AddPage extends HookWidget {
+  const AddPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // 入力値
+    final zipcodeController = useTextEditingController();
+    final address1State = useState<Prefecture?>(null);
+    final address2Controller = useTextEditingController();
+    final address3Controller = useTextEditingController();
+    final address4Controller = useTextEditingController();
+    // フォーカス
+    final address2FocusNode = useFocusNode();
+    final address3FocusNode = useFocusNode();
+    final address4FocusNode = useFocusNode();
+    // zipcodeFocusNode → autoFocus:true で対応できるため不要
+    // address1FocusNode → AutoFill が成功した場合は address3 へ・失敗した場合は zipCode でのフォーカスを留めるため不要
+
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Gap(16),
+            TextFormField(
+              autofocus: true,
+              controller: zipcodeController,
+              decoration: const InputDecoration(labelText: '郵便番号'),
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(7),
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+              onChanged: (zipcode) async {
+                // 7 桁になったら住所検索
+                if (zipcode.length != 7) return;
+                final result = await _searchAddress(zipcode);
+                // ヒットすれば address3 まで入力
+                if (result != null) {
+                  address1State.value =
+                      Prefecture.values.byCode(result.prefcode);
+                  address2Controller.text = result.address2;
+                  address3Controller.text = result.address3;
+                  address3FocusNode.requestFocus();
+                } else {
+                  // しなければ SnackBar 表示（ダイアログ等でフローを止めないようにする）
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('該当する住所が見つかりませんでした')),
+                  );
+                }
+              },
+            ),
+            const Gap(8),
+            DropdownButtonFormField<Prefecture>(
+              value: address1State.value,
+              decoration: const InputDecoration(labelText: '都道府県'),
+              items: Prefecture.values
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e.ja)))
+                  .toList(),
+              onChanged: (value) {
+                address1State.value = value;
+                address2FocusNode.requestFocus();
+              },
+            ),
+            const Gap(8),
+            TextFormField(
+              controller: address2Controller,
+              focusNode: address2FocusNode,
+              decoration: const InputDecoration(labelText: '市区町村'),
+              onEditingComplete: () => address3FocusNode.requestFocus(),
+            ),
+            const Gap(8),
+            TextFormField(
+              controller: address3Controller,
+              focusNode: address3FocusNode,
+              decoration: const InputDecoration(labelText: '番地'),
+              onEditingComplete: () => address4FocusNode.requestFocus(),
+            ),
+            const Gap(8),
+            TextFormField(
+              controller: address4Controller,
+              focusNode: address4FocusNode,
+              decoration: const InputDecoration(labelText: '建物名（任意）'),
+              onEditingComplete: () => FocusScope.of(context).unfocus(),
+            ),
+            const Gap(16),
+            Center(
+              child: ElevatedButton(
+                onPressed: () async {追加処理}
+                child: const Text('追加'),
+              ),
+            ),
+```
+
+flutter_hooks の [useFocusNode](https://pub.dev/documentation/flutter_hooks/latest/flutter_hooks/useFocusNode.html) を使用しています。dispose を自動でやってくれて便利です。
+
+### 入力可能な値の絞り込み
+
+最後に少し細かいところですが、入力可能な値を絞り込むと、より気持ちよくなれました。
+
+- 郵便番号：数値 7 桁
+- 都道府県：47 個の選択肢から一択
+
+なので、前者はキーボードや formatter で絞り込み、後者は enum のドロップダウンで選択するようにしました。
+
+```dart
+            // 郵便番号
+            TextFormField(
+              autofocus: true,
+              controller: zipcodeController,
+              decoration: const InputDecoration(labelText: '郵便番号'),
+              keyboardType: TextInputType.number, // 数値キーボードの指定
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(7), // 桁数制限
+                FilteringTextInputFormatter.digitsOnly, // ペースト対応バリデート
+              ],
+            ),
+            const Gap(8),
+            // 都道府県
+            DropdownButtonFormField<Prefecture>(
+              value: address1State.value,
+              decoration: const InputDecoration(labelText: '都道府県'),
+              items: Prefecture.values
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e.ja)))
+                  .toList(),
+              onChanged: (value) {
+                address1State.value = value;
+                address2FocusNode.requestFocus();
+              },
+            ),
+```
 
 :::details 都道府県 enum
 
@@ -249,35 +399,8 @@ extension PrefEx on List<Prefecture> {
 
 :::
 
-### バリデーション
-
-次に
-
-### フォーカスの管理
-
-フォーカスとは、特定の入力フィールドに対してキーボードが出て、入力可能な状態のことです。
-
-これが何も設定されていないアプリでは、住所 ① 入力 → 次のフィールドタップ → 住所 ② 入力 → 次のフィールドタップ... といった具合に、入力とフィールドタップを繰り返さなければいけません。ちょっとだけ気持ちよくないです。
-
-単純に上から下へ（正確には [FocusTraversal](https://api.flutter.dev/flutter/widgets/FocusTraversalGroup-class.html) 順）とフォーカスを当てていく分には [`FocusScope.of(context).nextFocus()`](https://api.flutter.dev/flutter/widgets/FocusNode/nextFocus.html) メソッドで良いのですが、今回は AutoFill の対応もあるので、入力フィールドごとに FocusNode を作成して、フォーカスのリクエストを送ります。
-
-今回のサンプルでは、
-
-1. キーボードの完了ボタンで上から下に自動でフォーカスが当たっていく
-2. AutoFill があった時は、適切なフィールドまでフォーカスを飛ばす
-3. もしテキストフィールド外をタップした場合はフォーカスを外す（onTapOutSide）
-
-を実装しています。
-
-```dart
-    // zipcodeFocusNode → autoFocus:true で対応できるため不要
-    // address1FocusNode → AutoFill が成功した場合は address3 へ・失敗した場合は zipCode でのフォーカスを留めるため不要
-    final address2FocusNode = useFocusNode();
-    final address3FocusNode = useFocusNode();
-    final address4FocusNode = useFocusNode();
-```
-
-flutter_hooks の [useFocusNode](https://pub.dev/documentation/flutter_hooks/latest/flutter_hooks/useFocusNode.html) を使用しています。dispose を自動でやってくれて便利です。
+複雑な処理などは実装していないので、あまり説明なくコードベースになってしまいましたが、どなたかの参考になれば幸いです。
+もし他にも、もっと気持ちよくなれそうな工夫があれば、ぜひコメントいただきたいです。
 
 ## 2. FirebaseExtension で住所検証（日本非対応・番外編）
 
@@ -303,7 +426,7 @@ flutter_hooks の [useFocusNode](https://pub.dev/documentation/flutter_hooks/lat
 
 難易度の高い住所の有効性検証を手軽に実装できるのは良さそうですね。特に日本だと難易度が高いことは知られているようで、過去に X(Twitter) などでも[話題](https://togetter.com/li/2161880)になっています。
 
-自分もこの記事を書く中で初めて見てみたのですが、ぜひ興味のある方は、奥の深い住所の森を覗いてみてはいかがでしょうか。
+自分もこの記事を書く中で初めて知ったのですが、ぜひ興味のある方は、奥の深い住所の森を覗いてみてはいかがでしょうか。
 
 - [日本の住所の正規化に本気で取り組んでみたら大変すぎて鼻血が出た。- Qiita](https://qiita.com/miya0001/items/598070abcdf0799daebc)
 - [とにかく日本の住所のヤバさをもっと知るべきだと思います - note](https://note.com/inuro/n/n7ec7cf15cf9c)
