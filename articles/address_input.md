@@ -15,7 +15,7 @@ published: false
 
 とあるアプリを触っていた時に気持ちよくない住所入力を体験したので、Flutter でどうすれば気持ちよくできるかを考え、下記ようなサンプルを実装してみました。
 
-動画
+![](https://storage.googleapis.com/zenn-user-upload/7972e8870005-20231201.gif)
 
 後半では住所の有効性チェックについて記述しようとしたものの意図せず番外編となってしまいましたが、どなたかの参考になれば幸いです。
 
@@ -28,23 +28,23 @@ https://github.com/DaigoWakabayashi/flutter_address_input
 
 ## 1. 気持ちよい住所入力
 
-まず「気持ちよい住所入力 ≒ 速く正しい住所入力」であることを念頭において、どういった工夫ができるか考えた結果、下記 3 つがあれば、ある程度気持ちよくなれそうだという結論に至りました。
+本記事では
 
-- 郵便番号からの AutoFill
+- 郵便番号からの自動入力
 - フォーカスの管理
 - 入力可能な値の絞り込み
 
-ひとつずつ、サンプルコードを紹介しながら解説します。
+の 3 つの工夫について、サンプルコードを紹介しながら解説します。
 
-### 郵便番号からの AutoFill
+### 郵便番号からの自動入力
 
-郵便番号からの AutoFill とは、入力された 7 桁の郵便番号を元に API を叩き、確実にわかるところまで住所を自動で埋める、といった実装です。
+郵便番号からの自動入力とは、入力された 7 桁の郵便番号を元に API を叩き住所を自動で埋める、といった実装です。
 
 複数の外部 API サービスがあるようでしたが、一番ポピュラーかつ無料らしい [zipcloud の郵便番号検索 API](http://zipcloud.ibsnet.co.jp/doc/api) を使用してみました。
 
 https://qiita.com/megane_/items/c8e4062697eaa785a103
 
-該当するコードはこちら。Flutter 大学の逆引き辞典に少し手を加えた実装です。
+該当するコードはこちら。[Flutter 大学の逆引き辞典](https://zenn.dev/pressedkonbu/books/flutter-reverse-lookup-dictionary/viewer/022-postal_code_to_address)に少し手を加えたような実装です。
 
 ```dart: 検索関数
 Future<Address?> _searchAddress(String zipcode) async {
@@ -82,11 +82,9 @@ class AddPage extends HookWidget {
     final address4Controller = useTextEditingController();
 
     return Scaffold(
-      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(16),
             TextFormField(
@@ -171,13 +169,14 @@ class Address {
 
 これが何も設定されていないアプリでは、住所 ① 入力 → 次のフィールドタップ → 住所 ② 入力 → 次のフィールドタップ... といった具合に、入力とフィールドタップを繰り返さなければいけません。ちょっとだけ気持ちよくないです。
 
-単純に上から下へ（正確には [FocusTraversal](https://api.flutter.dev/flutter/widgets/FocusTraversalGroup-class.html) 順）とフォーカスを当てていく分には [`FocusScope.of(context).nextFocus()`](https://api.flutter.dev/flutter/widgets/FocusNode/nextFocus.html) メソッドで良いのですが、今回は AutoFill の対応もあるので、入力フィールドごとに FocusNode を作成して、フォーカスのリクエストを送ります。
+単純に上から下へ（正確には [FocusTraversal](https://api.flutter.dev/flutter/widgets/FocusTraversalGroup-class.html) 順）とフォーカスを当てていく分には [`FocusScope.of(context).nextFocus()`](https://api.flutter.dev/flutter/widgets/FocusNode/nextFocus.html) メソッドで良いのですが、今回は自動入力
+の対応もあるので、入力フィールドごとに FocusNode を作成して、フォーカスのリクエストを送ります。
 
 今回のサンプルでは、
 
-1. キーボードの完了ボタンで上から下に自動でフォーカスが当たっていく
-2. AutoFill があった時は、適切なフィールドまでフォーカスを飛ばす
-3. もしテキストフィールド外をタップした場合はフォーカスを外す（onTapOutSide）
+1. キーボードの完了ボタンで上から下に自動でフォーカスが当たっていく 2.自動入力
+   があった時は、適切なフィールドまでフォーカスを飛ばす
+2. もしテキストフィールド外をタップした場合はフォーカスを外す（onTapOutSide）
 
 を実装しています。
 
@@ -198,13 +197,12 @@ class AddPage extends HookWidget {
     final address3FocusNode = useFocusNode();
     final address4FocusNode = useFocusNode();
     // zipcodeFocusNode → autoFocus:true で対応できるため不要
-    // address1FocusNode → AutoFill が成功した場合は address3 へ・失敗した場合は zipCode でのフォーカスを留めるため不要
+    // address1FocusNode → 自動入力が成功した場合は address3 へ・失敗した場合は zipCode でのフォーカスを留めるため不要
 
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(16),
             TextFormField(
@@ -400,11 +398,14 @@ extension PrefEx on List<Prefecture> {
 :::
 
 複雑な処理などは実装していないので、あまり説明なくコードベースになってしまいましたが、どなたかの参考になれば幸いです。
-もし他にも、もっと気持ちよくなれそうな工夫があれば、ぜひコメントいただきたいです。
+
+もし他にも工夫があれば、ぜひコメントいただきたいです。
 
 ## 2. FirebaseExtension で住所検証（日本非対応・番外編）
 
-本当はこちらを主題に持ってこようかと思っていたのですが、実装の途中で **日本では非対応であることに気づいた** （愚か）ので、グローバルプロジェクトを開発している方へ、そしていつか日本に対応した時に少しでも参考になるようにと、念の為記録を残しておきます。
+さて、前半では入力について紹介しましたが、後半は住所の住所の検証 Extension の紹介です。
+
+本当はこちらを主題に持ってこようかと思っていたのですが、実装の途中で **日本では非対応であることに気づいた** （かなしい）ので、グローバルプロジェクトを開発している方へ、そしていつか日本に対応した時に少しでも参考になるようにと、念の為記録を残しておきます。
 
 :::message
 
