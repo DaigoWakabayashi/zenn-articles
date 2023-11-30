@@ -4,7 +4,7 @@ emoji: "💙"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["Flutter", "Firebase", "Firestore", "FirebaseExtensions"]
 publication_name: "flutteruniv_dev"
-published: false
+published: true
 ---
 
 この記事は、[Flutter 大学アドベントカレンダー 2023](https://qiita.com/advent-calendar/2023/flutteruniv) 1 日目の記事です。
