@@ -11,11 +11,13 @@ published: false
 
 ## はじめに
 
-ダイゴです。
+こんにちは、[ダイゴ](https://twitter.com/mamushi_journey) です。
 
-とあるアプリを触っていた時に気持ちよくない住所入力を体験したので、Flutter でどうすれば気持ちよくできるかを考え、実装してみました。
+とあるアプリを触っていた時に気持ちよくない住所入力を体験したので、Flutter でどうすれば気持ちよくできるかを考え、下記ようなサンプルを実装してみました。
 
-どなたかの参考になれば幸いです。
+動画
+
+後半では住所の有効性チェックについて記述しようとしたものの意図せず番外編となってしまいましたが、どなたかの参考になれば幸いです。
 
 ### 環境
 
@@ -24,29 +26,45 @@ published: false
 
 https://github.com/DaigoWakabayashi/flutter_address_input
 
-### 目次
+## 1. 気持ちよい住所入力
 
-## 1. Flutter での住所入力
+まず「気持ちよい住所入力 ≒ 速く正しい住所入力」であることを念頭において、どういった工夫ができるか考えた結果、下記 3 つがあれば、ある程度気持ちよくなれそうだという結論に至りました。
 
-まず、気持ちよい住所入力とは
+- 郵便番号の AutoFill
+- バリデーション
+- フォーカスの管理
 
-- 「とにかく速く」
-- 「バリデーションは緩く」
+ひとつずつ、サンプルコードを紹介しながら解説します。
 
-### フォーカス管理
-
-- onTapOutside
+### 郵便番号の AutoFill
 
 ### バリデーション
 
-### 郵便番号の autoFill
+### フォーカスの管理
 
-:::message
+フォーカスとは、特定の入力フィールドに対してキーボードが出て、入力可能な状態のことです。
 
-- 住所データは可能であれば持ちたくないので、要件が合うようなら外部サービスへの保存とかも検討する（Stripe の customer.shipping など）
-- もし Firestore に保存するなら「認証認可」「スキーマ検証」「バリデーション」を意識したセキュリティルールを書く
+これが何も設定されていないアプリでは、住所 ① 入力 → 次のフィールドタップ → 住所 ② 入力 → 次のフィールドタップ... といった具合に、入力とフィールドタップを繰り返さなければいけません。ちょっとだけ気持ちよくないです。
 
-:::
+単純に上から下へ（正確には [FocusTraversal](https://api.flutter.dev/flutter/widgets/FocusTraversalGroup-class.html) 順）とフォーカスを当てていく分には [`FocusScope.of(context).nextFocus()`](https://api.flutter.dev/flutter/widgets/FocusNode/nextFocus.html) メソッドで良いのですが、今回は AutoFill の対応もあるので、入力フィールドごとに FocusNode を作成して、フォーカスのリクエストを送ります。
+
+今回のサンプルでは、
+
+1. キーボードの完了ボタンで上から下に自動でフォーカスが当たっていく
+2. AutoFill があった時は、適切なフィールドまでフォーカスを飛ばす
+3. もしテキストフィールド外をタップした場合はフォーカスを外す（onTapOutSide）
+
+を実装しています。
+
+```dart
+    // zipcodeFocusNode → autoFocus:true で対応できるため不要
+    // address1FocusNode → AutoFill が成功した場合は address3 へ・失敗した場合は zipCode でのフォーカスを留めるため不要
+    final address2FocusNode = useFocusNode();
+    final address3FocusNode = useFocusNode();
+    final address4FocusNode = useFocusNode();
+```
+
+flutter_hooks の [useFocusNode](https://pub.dev/documentation/flutter_hooks/latest/flutter_hooks/useFocusNode.html) を使用しています。dispose を自動でやってくれて便利です。
 
 ## 2. FirebaseExtension で住所検証（日本非対応・番外編）
 
