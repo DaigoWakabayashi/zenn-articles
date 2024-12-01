@@ -18,7 +18,7 @@ published: true
 *[Dart3.0の概要と実務における活用](https://docs.google.com/presentation/d/1lt6Kfnrj5JABO_lFydQTkYBqPpitnB84jATo_GN5cO0/edit#slide=id.g24e63824e57_2_41)*
 
 
-本記事では、Dart の次なる大きな進化となるであろう [macros](https://dart.dev/language/macros) について、その概要と実装方法についてまとめています。
+本記事では、Dart の次なる大きな進化となるであろう [macros](https://dart.dev/language/macros) について、その概要と実装方法をまとめています。
 
 タイムライン的には、後述する JsonCodable macro の stable リリースが 2024年末、そして Dart の完全な言語機能としての stable リリースは 2025 年初頭を目指していると記載されており、そう遠くない未来でリリースされうる機能なので、今のうちにイメージを掴んでおきたいですね。
 
