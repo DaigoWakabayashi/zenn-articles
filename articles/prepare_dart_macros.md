@@ -6,6 +6,11 @@ topics: ["Dart", "Flutter"]
 published: true
 ---
 
+:::message alert
+2025年01月30日（日本時間）に、[macros の開発中断](https://medium.com/dartlang/an-update-on-dart-macros-data-serialization-06d3037d4f12) が Dart チームによりアナウンスされました。言語機能としての macros はリリースされない予定であることに注意してください。
+また、[公式ドキュメント](https://dart.dev/language/macros) の引用部分についても、執筆時点の内容とは変更されている点にご留意ください。
+:::
+
 この記事は、[Flutter 大学アドベントカレンダー 2024](https://qiita.com/advent-calendar/2024/flutteruniv) 1 日目の記事です。
 
 ## はじめに
